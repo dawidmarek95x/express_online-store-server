@@ -23,7 +23,7 @@
                                         <%= product.price %>
                                     </h2>
                                     <p class="product__description">
-                                        <%= product.description %>
+                                        <%= product.description.split(" ").filter((word, index) => index < 30).join(" ") %> <%= product.description.split(" ").length >= 30 ? "..." : "" %>
                                     </p>
                                 </div>
                                 <div class="card__actions">

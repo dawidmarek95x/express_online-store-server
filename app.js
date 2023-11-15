@@ -54,19 +54,6 @@ const PORT = 3000;
 mongoose
   .connect(MONGO_DB_URI)
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Dawid",
-          email: "dawid@test.com",
-          cart: {
-            items: [],
-          },
-        });
-        user.save();
-      }
-    });
-
     app.listen(PORT, () => {
       console.log(`Server running at http://localhost:${PORT}/`);
     });
