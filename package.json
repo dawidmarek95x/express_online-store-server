@@ -12,6 +12,7 @@
   "author": "Dawid Marek <dawid.marek95x@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.9.0",
     "bcryptjs": "^2.4.3",
