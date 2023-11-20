@@ -1,4 +1,5 @@
 const express = require("express");
+const { body } = require("express-validator");
 
 const adminController = require("../controllers/admin");
 const isAuthMiddleware = require("../middlewares/is-auth");
@@ -12,7 +13,29 @@ router.get("/add-product", isAuthMiddleware, adminController.getAddProduct);
 router.get("/products", isAuthMiddleware, adminController.getProducts);
 
 // // /admin/add-product => POST
-router.post("/add-product", isAuthMiddleware, adminController.postAddProduct);
+router.post(
+  "/add-product",
+  [
+    body("title")
+      .isString()
+      .trim()
+      .notEmpty()
+      .withMessage("Please enter a title."),
+    body("imageUrl")
+      .isString()
+      .trim()
+      .isURL()
+      .withMessage("Please enter a valid image URL."),
+    body("price").isFloat().withMessage("Please enter a price."),
+    body("description")
+      .isString()
+      .trim()
+      .isLength({ min: 5, max: 500 })
+      .withMessage("The description should contain from 5 to 500 characters."),
+  ],
+  isAuthMiddleware,
+  adminController.postAddProduct
+);
 
 router.get(
   "/edit-product/:productId",
@@ -20,7 +43,29 @@ router.get(
   adminController.getEditProduct
 );
 
-router.post("/edit-product", isAuthMiddleware, adminController.postEditProduct);
+router.post(
+  "/edit-product",
+  [
+    body("title")
+      .isString()
+      .trim()
+      .notEmpty()
+      .withMessage("Please enter a title."),
+    body("imageUrl")
+      .isString()
+      .trim()
+      .isURL()
+      .withMessage("Please enter a valid image URL."),
+    body("price").isFloat().withMessage("Please enter a price."),
+    body("description")
+      .isString()
+      .trim()
+      .isLength({ min: 5, max: 500 })
+      .withMessage("The description should contain from 5 to 500 characters."),
+  ],
+  isAuthMiddleware,
+  adminController.postEditProduct
+);
 
 router.post(
   "/delete-product",
