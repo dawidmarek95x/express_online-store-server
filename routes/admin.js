@@ -25,8 +25,8 @@ router.post(
     body("description")
       .isString()
       .trim()
-      .isLength({ min: 5, max: 1000 })
-      .withMessage("The description should contain from 5 to 500 characters."),
+      .isLength({ min: 5, max: 2000 })
+      .withMessage("The description should contain from 5 to 2000 characters."),
   ],
   isAuthMiddleware,
   adminController.postAddProduct
@@ -50,8 +50,8 @@ router.post(
     body("description")
       .isString()
       .trim()
-      .isLength({ min: 5, max: 1000 })
-      .withMessage("The description should contain from 5 to 500 characters."),
+      .isLength({ min: 5, max: 2000 })
+      .withMessage("The description should contain from 5 to 2000 characters."),
   ],
   isAuthMiddleware,
   adminController.postEditProduct
