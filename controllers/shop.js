@@ -1,3 +1,7 @@
+const fs = require("fs");
+const path = require("path");
+const PDFDocument = require("pdfkit");
+
 const Product = require("../models/product");
 const Order = require("../models/order");
 
@@ -8,7 +12,6 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "All Products",
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -26,7 +29,6 @@ exports.getProduct = (req, res, next) => {
         product: product,
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -61,7 +63,6 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
-        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -80,6 +81,11 @@ exports.postCart = (req, res, next) => {
     .then((result) => {
       console.log(result);
       res.redirect("/cart");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -142,4 +148,61 @@ exports.getOrders = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+};
+
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId;
+  Order.findById(orderId)
+    .then((order) => {
+      if (!order) {
+        return next(new Error("Order not found!"));
+      }
+
+      if (order.user.userId.toString() !== req.user._id.toString()) {
+        return next(new Error("Unauthorized user!"));
+      }
+
+      const invoiceName = `invoice-${orderId}.pdf`;
+      const invoicePath = path.join("data", "invoices", invoiceName);
+
+      const pdfDoc = new PDFDocument();
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename=${invoiceName}`);
+
+      pdfDoc.pipe(fs.createWriteStream(invoicePath));
+      pdfDoc.pipe(res);
+
+      pdfDoc.fontSize(24).text(`Invoice #${orderId}`);
+
+      pdfDoc
+        .fontSize(20)
+        .text(
+          "----------------------------------------------------------------------"
+        );
+
+      let totalPrice = 0;
+
+      order.products.forEach((prod) => {
+        totalPrice += prod.product.price * prod.quantity;
+
+        pdfDoc
+          .fontSize(14)
+          .text(
+            `${prod.product.title} - ${
+              prod.quantity
+            } x $${prod.product.price.toFixed(2)}`
+          );
+      });
+
+      pdfDoc
+        .fontSize(20)
+        .text(
+          "----------------------------------------------------------------------"
+        );
+      pdfDoc.fontSize(18).text(`Total Price: $${totalPrice.toFixed(2)}`);
+
+      pdfDoc.end();
+    })
+    .catch((err) => next(err));
 };

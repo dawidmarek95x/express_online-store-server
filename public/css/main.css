@@ -178,9 +178,9 @@ form {
   padding: 1rem;
 }
 
-.card__header h1,
-.card__content h1,
+.card__header h2,
 .card__content h2,
+.card__content h3,
 .card__content p {
   margin: 0;
 }

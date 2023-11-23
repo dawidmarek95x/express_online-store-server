@@ -21,16 +21,11 @@ router.post(
       .trim()
       .notEmpty()
       .withMessage("Please enter a title."),
-    body("imageUrl")
-      .isString()
-      .trim()
-      .isURL()
-      .withMessage("Please enter a valid image URL."),
     body("price").isFloat().withMessage("Please enter a price."),
     body("description")
       .isString()
       .trim()
-      .isLength({ min: 5, max: 500 })
+      .isLength({ min: 5, max: 1000 })
       .withMessage("The description should contain from 5 to 500 characters."),
   ],
   isAuthMiddleware,
@@ -51,16 +46,11 @@ router.post(
       .trim()
       .notEmpty()
       .withMessage("Please enter a title."),
-    body("imageUrl")
-      .isString()
-      .trim()
-      .isURL()
-      .withMessage("Please enter a valid image URL."),
     body("price").isFloat().withMessage("Please enter a price."),
     body("description")
       .isString()
       .trim()
-      .isLength({ min: 5, max: 500 })
+      .isLength({ min: 5, max: 1000 })
       .withMessage("The description should contain from 5 to 500 characters."),
   ],
   isAuthMiddleware,
