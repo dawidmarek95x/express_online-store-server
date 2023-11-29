@@ -30,7 +30,8 @@
     "mysql2": "^3.6.2",
     "nanoid": "^3.3.4",
     "pdfkit": "^0.14.0",
-    "sequelize": "^5.0.0-beta.11"
+    "sequelize": "^5.0.0-beta.11",
+    "stripe": "^14.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

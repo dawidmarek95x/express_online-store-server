@@ -166,7 +166,7 @@ exports.getProducts = (req, res, next) => {
     .countDocuments()
     .then((amountOfProducts) => {
       totalResults = amountOfProducts;
-      return Product.find()
+      return Product.find({ userId: req.user._id })
         .skip((page - 1) * ITEMS_PER_PAGE)
         .limit(ITEMS_PER_PAGE);
     })
@@ -193,8 +193,8 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
+exports.deleteProduct = (req, res, next) => {
+  const prodId = req.params.productId;
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
@@ -206,11 +206,9 @@ exports.postDeleteProduct = (req, res, next) => {
     })
     .then(() => {
       console.log(`Removed product: ${prodId}`);
-      res.redirect("/admin/products");
+      res.status(200).json({ message: "Success" });
     })
     .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      res.status(500).json({ message: "Product removal failed!" });
     });
 };

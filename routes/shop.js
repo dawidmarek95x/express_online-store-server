@@ -21,7 +21,11 @@ router.post(
   shopController.postCartDeleteProduct
 );
 
-router.post("/create-order", isAuthMiddleware, shopController.postOrder);
+router.get("/checkout", isAuthMiddleware, shopController.getCheckout);
+
+router.get("/checkout/success", shopController.getCheckoutSuccess);
+
+router.get("/checkout/cancel", shopController.getCheckout);
 
 router.get("/orders", isAuthMiddleware, shopController.getOrders);
 
